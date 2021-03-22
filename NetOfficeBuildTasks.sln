@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31112.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetOfficeBuildTasks", "src\NetOfficeBuildTasks.csproj", "{096477F4-FB4B-48B8-9434-D6BB431BD804}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{096477F4-FB4B-48B8-9434-D6BB431BD804}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{096477F4-FB4B-48B8-9434-D6BB431BD804}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{096477F4-FB4B-48B8-9434-D6BB431BD804}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{096477F4-FB4B-48B8-9434-D6BB431BD804}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {96C8C21E-E674-46CF-87D1-4861D10EBCDA}
+	EndGlobalSection
+EndGlobal
