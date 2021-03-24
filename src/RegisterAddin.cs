@@ -26,6 +26,7 @@ namespace NetOfficeBuildTasks
                 var publicTypes = assembly.GetExportedTypes();
 
                 var addinTypes = new List<TaskItem>();
+                var registryWrites = new List<TaskItem>();
 
                 foreach (var publicType in publicTypes)
                 {
@@ -33,22 +34,32 @@ namespace NetOfficeBuildTasks
                     if (isComVisible)
                     {
                         var name = publicType.Name;
-                        var guid = publicType.GUID.ToString("D");
+                        var guid = publicType.GUID;
                         var progId = GetProgId(publicType);
 
                         var metadata = new Dictionary<string,string>
                         {
                             { "Namespace", publicType.Namespace },
-                            { "Guid", guid },
+                            { "Guid", guid.ToString("D") },
                             { "ProgId", progId }
                         };
 
                         var itemWrite = new TaskItem(name, metadata);
                         addinTypes.Add(itemWrite);
+
+                        var comClass = new ComClassRegistry(this.Log);
+                        var registeredKey = comClass.RegisterProgId(progId, guid);
+
+                        if (registeredKey != null)
+                        {
+                            var registryWrite = new TaskItem(registeredKey);
+                            registryWrites.Add(registryWrite);
+                        }
                     }
                 }
 
                 this.AddinTypes = addinTypes.ToArray();
+                this.RegistryWrites = registryWrites.ToArray();
             }
             catch (Exception ex)
             {

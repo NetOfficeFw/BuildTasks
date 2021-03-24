@@ -1,0 +1,46 @@
+﻿using Microsoft.Build.Utilities;
+using Microsoft.Win32;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace NetOfficeBuildTasks
+{
+    public class ComClassRegistry
+    {
+        public ComClassRegistry(TaskLoggingHelper log)
+        {
+            this.HkeyBase = Registry.CurrentUser;
+            this.Log = log;
+        }
+
+        public RegistryKey HkeyBase { get; }
+
+        public TaskLoggingHelper Log { get; }
+
+        public string RegisterProgId(string progId, Guid guid)
+        {
+            try
+            {
+                using (var classes = this.HkeyBase.OpenSubKey(@"Software\Classes", writable: true))
+                {
+                    var progIdKey = classes.CreateSubKey(progId);
+                    progIdKey.SetValue(null, progId);
+
+                    var guidKey = progIdKey.CreateSubKey("CLSID");
+                    guidKey.SetValue(null, guid.ToString("B").ToUpperInvariant());
+
+                    return progIdKey.Name;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message);
+            }
+
+            return null;
+        }
+    }
+}
