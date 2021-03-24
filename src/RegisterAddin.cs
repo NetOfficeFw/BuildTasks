@@ -33,9 +33,14 @@ namespace NetOfficeBuildTasks
                     if (isComVisible)
                     {
                         var name = publicType.Name;
+                        var guid = publicType.GUID.ToString("D");
+                        var progId = GetProgId(publicType);
+
                         var metadata = new Dictionary<string,string>
                         {
-                            { "Namespace", publicType.Namespace }
+                            { "Namespace", publicType.Namespace },
+                            { "Guid", guid },
+                            { "ProgId", progId }
                         };
 
                         var itemWrite = new TaskItem(name, metadata);
@@ -58,6 +63,12 @@ namespace NetOfficeBuildTasks
         {
             var comVisibleAttribute = type.GetCustomAttribute<ComVisibleAttribute>();
             return comVisibleAttribute?.Value ?? false;
+        }
+
+        private static string GetProgId(Type type)
+        {
+            var attr = type.GetCustomAttribute<ProgIdAttribute>();
+            return attr?.Value;
         }
     }
 }

@@ -22,6 +22,29 @@ namespace NetOfficeBuildTasks
             Assert.IsTrue(run);
         }
 
+        [Test]
+        public void AddinTypes_Test1()
+        {
+            // Arrange
+            var task = new RegisterAddin();
+            task.AssemblyPath = GetAsTaskItem("AcmeCorpAddinNet46.dll");
+
+            // Act
+            bool run = task.Execute();
+            var types = task.AddinTypes;
+
+            // Assert
+            var connectClass = types[0];
+            var ns = connectClass.GetMetadata("Namespace");
+            var guid = connectClass.GetMetadata("Guid");
+            var progId  = connectClass.GetMetadata("ProgId");
+
+            Assert.AreEqual("ConnectClass", connectClass.ItemSpec);
+            Assert.AreEqual("AcmeCorp.Net46Sample", ns);
+            Assert.AreEqual("70680b7a-09a3-43ee-85ae-e21d54a1c075", guid);
+            Assert.AreEqual("AcmeCorp.Net46Sample.ConnectClass", progId);
+        }
+
         private ITaskItem GetAsTaskItem(string assemblyName)
         {
             var path = Path.Combine(TestContext.CurrentContext.TestDirectory, assemblyName);
