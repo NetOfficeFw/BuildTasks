@@ -3,6 +3,7 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,6 +35,39 @@ namespace NetOffice.Build
                     guidKey.SetValue(null, guidValue);
 
                     return progIdKey.Name;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message);
+            }
+
+            return null;
+        }
+
+        public string RegisterComClass(string progId, Guid guid, Assembly assembly)
+        {
+            try
+            {
+                using (var classes = this.HkeyBase.OpenSubKey(@"Software\Classes\CLSID", writable: true))
+                {
+                    var guidValue = guid.ToRegistryString();
+                    var clsidKey = classes.CreateSubKey(guidValue);
+
+                    clsidKey.SetValue(null, progId);
+                    clsidKey.CreateSubKey(@"Implemented Categories\{62C8FE65-4EBB-45E7-B440-6E39B2CDBF29}");
+                    var progIdKey = clsidKey.CreateSubKey("ProgId");
+                    progIdKey.SetValue(null, progId);
+
+                    var inprocServer = clsidKey.CreateSubKey("InprocServer32");
+                    inprocServer.SetValue(null, "mscoree.dll");
+                    inprocServer.SetValue("Assembly", assembly.GetName().FullName);
+                    inprocServer.SetValue("Class", progId);
+                    inprocServer.SetValue("Codebase", assembly.GetCodebase());
+                    inprocServer.SetValue("RuntimeVersion", "v4.0.30319");
+                    inprocServer.SetValue("ThreadingModel", "Both");
+
+                    return clsidKey.Name;
                 }
             }
             catch (Exception ex)

@@ -48,11 +48,18 @@ namespace NetOffice.Build
                         addinTypes.Add(itemWrite);
 
                         var comClass = new ComClassRegistry(this.Log);
+                        
                         var registeredKey = comClass.RegisterProgId(progId, guid);
-
                         if (registeredKey != null)
                         {
                             var registryWrite = new TaskItem(registeredKey);
+                            registryWrites.Add(registryWrite);
+                        }
+
+                        var comClassKey = comClass.RegisterComClass(progId, guid, assembly);
+                        if (comClassKey != null)
+                        {
+                            var registryWrite = new TaskItem(comClassKey);
                             registryWrites.Add(registryWrite);
                         }
                     }
