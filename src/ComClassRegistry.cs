@@ -30,7 +30,8 @@ namespace NetOffice.Build
                     progIdKey.SetValue(null, progId);
 
                     var guidKey = progIdKey.CreateSubKey("CLSID");
-                    guidKey.SetValue(null, guid.ToString("B").ToUpperInvariant());
+                    var guidValue = guid.ToRegistryString();
+                    guidKey.SetValue(null, guidValue);
 
                     return progIdKey.Name;
                 }
