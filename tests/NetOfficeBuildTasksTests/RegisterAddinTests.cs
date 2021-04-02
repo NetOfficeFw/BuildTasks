@@ -45,6 +45,23 @@ namespace NetOfficeBuildTasks
             Assert.AreEqual("AcmeCorp.Net46Sample.ConnectClass", progId);
         }
 
+        [Test]
+        public void RegistryWrites_ValidComClass()
+        {
+            // Arrange
+            var task = new RegisterAddin();
+            task.AssemblyPath = GetAsTaskItem("AcmeCorpAddinNet46.dll");
+
+            // Act
+            task.Execute();
+            var writes = task.RegistryWrites;
+
+            // Assert
+            var registryKeyProgId = writes[0];
+
+            Assert.AreEqual(@"HKEY_CURRENT_USER\Software\Classes\AcmeCorp.Net46Sample.ConnectClass", registryKeyProgId.ItemSpec);
+        }
+
         private ITaskItem GetAsTaskItem(string assemblyName)
         {
             var path = Path.Combine(TestContext.CurrentContext.TestDirectory, assemblyName);
