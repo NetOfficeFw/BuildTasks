@@ -1,0 +1,14 @@
+<Project>
+  <UsingTask TaskName="NetOffice.Build.RegisterAddin" AssemblyFile="$(MSBuildThisFileDirectory)NetOfficeBuildTasks.dll" />
+
+  <ItemGroup>
+    <Library Include="$(MSBuildThisFileDirectory)AcmeCorpAddinNet46.dll" />
+  </ItemGroup>
+
+  <Target Name="Build">
+    <RegisterAddin AssemblyPath="@(Library)" />
+  </Target>
+
+  <Target Name="Clean">
+  </Target>
+</Project>

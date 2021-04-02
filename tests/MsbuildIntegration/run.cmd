@@ -1,0 +1,1 @@
+msbuild.exe /t:Build sample.proj
