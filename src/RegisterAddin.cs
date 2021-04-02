@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-namespace NetOfficeBuildTasks
+namespace NetOffice.Build
 {
     public class RegisterAddin : Task
     {

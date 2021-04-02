@@ -4,7 +4,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using NUnit.Framework;
 
-namespace NetOfficeBuildTasks
+namespace NetOffice.Build
 {
     public class RegisterAddinTests
     {
