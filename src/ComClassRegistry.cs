@@ -25,17 +25,15 @@ namespace NetOffice.Build
         {
             try
             {
-                using (var classes = this.HkeyBase.OpenSubKey(@"Software\Classes", writable: true))
-                {
-                    var progIdKey = classes.CreateSubKey(progId);
-                    progIdKey.SetValue(null, progId);
+                using var classes = this.HkeyBase.OpenSubKey(@"Software\Classes", writable: true);
+                var progIdKey = classes.CreateSubKey(progId);
+                progIdKey.SetValue(null, progId);
 
-                    var guidKey = progIdKey.CreateSubKey("CLSID");
-                    var guidValue = guid.ToRegistryString();
-                    guidKey.SetValue(null, guidValue);
+                var guidKey = progIdKey.CreateSubKey("CLSID");
+                var guidValue = guid.ToRegistryString();
+                guidKey.SetValue(null, guidValue);
 
-                    return progIdKey.Name;
-                }
+                return progIdKey.Name;
             }
             catch (Exception ex)
             {
@@ -45,30 +43,39 @@ namespace NetOffice.Build
             return null;
         }
 
-        public string RegisterComClass(string progId, Guid guid, Assembly assembly)
+        public string RegisterComClassNative(string progId, Guid guid, Assembly assembly)
+        {
+            return RegisterComClass(RegistryView.Registry64, @"", progId, guid, assembly);
+        }
+
+        public string RegisterComClassWOW6432(string progId, Guid guid, Assembly assembly)
+        {
+            return RegisterComClass(RegistryView.Registry64, @"WOW6432Node\", progId, guid, assembly);
+        }
+
+        public string RegisterComClass(RegistryView view, string wow6432, string progId, Guid guid, Assembly assembly)
         {
             try
             {
-                using (var classes = this.HkeyBase.OpenSubKey(@"Software\Classes\CLSID", writable: true))
-                {
-                    var guidValue = guid.ToRegistryString();
-                    var clsidKey = classes.CreateSubKey(guidValue);
+                using var hkeyBase = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, view);
+                using var classes = this.HkeyBase.OpenSubKey($@"Software\Classes\{wow6432}CLSID", writable: true);
+                var guidValue = guid.ToRegistryString();
+                var clsidKey = classes.CreateSubKey(guidValue);
 
-                    clsidKey.SetValue(null, progId);
-                    clsidKey.CreateSubKey(@"Implemented Categories\{62C8FE65-4EBB-45E7-B440-6E39B2CDBF29}");
-                    var progIdKey = clsidKey.CreateSubKey("ProgId");
-                    progIdKey.SetValue(null, progId);
+                clsidKey.SetValue(null, progId);
+                clsidKey.CreateSubKey(@"Implemented Categories\{62C8FE65-4EBB-45E7-B440-6E39B2CDBF29}");
+                var progIdKey = clsidKey.CreateSubKey("ProgId");
+                progIdKey.SetValue(null, progId);
 
-                    var inprocServer = clsidKey.CreateSubKey("InprocServer32");
-                    inprocServer.SetValue(null, "mscoree.dll");
-                    inprocServer.SetValue("Assembly", assembly.GetName().FullName);
-                    inprocServer.SetValue("Class", progId);
-                    inprocServer.SetValue("Codebase", assembly.GetCodebase());
-                    inprocServer.SetValue("RuntimeVersion", "v4.0.30319");
-                    inprocServer.SetValue("ThreadingModel", "Both");
+                var inprocServer = clsidKey.CreateSubKey("InprocServer32");
+                inprocServer.SetValue(null, "mscoree.dll");
+                inprocServer.SetValue("Assembly", assembly.GetName().FullName);
+                inprocServer.SetValue("Class", progId);
+                inprocServer.SetValue("Codebase", assembly.GetCodebase());
+                inprocServer.SetValue("RuntimeVersion", "v4.0.30319");
+                inprocServer.SetValue("ThreadingModel", "Both");
 
-                    return clsidKey.Name;
-                }
+                return clsidKey.Name;
             }
             catch (Exception ex)
             {

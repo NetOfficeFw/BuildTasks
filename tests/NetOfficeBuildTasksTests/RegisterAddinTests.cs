@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using NUnit.Framework;
@@ -30,7 +31,7 @@ namespace NetOffice.Build
             task.AssemblyPath = GetAsTaskItem("AcmeCorpAddinNet46.dll");
 
             // Act
-            bool run = task.Execute();
+            task.Execute();
             var types = task.AddinTypes;
 
             // Assert
@@ -49,6 +50,13 @@ namespace NetOffice.Build
         public void RegistryWrites_ValidComClass()
         {
             // Arrange
+            var expectedRegistryPaths = new[]
+            {
+                @"HKEY_CURRENT_USER\Software\Classes\AcmeCorp.Net46Sample.ConnectClass",
+                @"HKEY_CURRENT_USER\Software\Classes\CLSID\{70680B7A-09A3-43EE-85AE-E21D54A1C075}",
+                @"HKEY_CURRENT_USER\Software\Classes\WOW6432Node\CLSID\{70680B7A-09A3-43EE-85AE-E21D54A1C075}",
+            };
+
             var task = new RegisterAddin();
             task.AssemblyPath = GetAsTaskItem("AcmeCorpAddinNet46.dll");
 
@@ -56,10 +64,10 @@ namespace NetOffice.Build
             task.Execute();
             var writes = task.RegistryWrites;
 
-            // Assert
-            var registryKeyProgId = writes[0];
+            var actualRegistryPaths = writes.Select(i => i.ItemSpec);
 
-            Assert.AreEqual(@"HKEY_CURRENT_USER\Software\Classes\AcmeCorp.Net46Sample.ConnectClass", registryKeyProgId.ItemSpec);
+            // Assert
+            CollectionAssert.AreEquivalent(expectedRegistryPaths, actualRegistryPaths);
         }
 
         private ITaskItem GetAsTaskItem(string assemblyName)

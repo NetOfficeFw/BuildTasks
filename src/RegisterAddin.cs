@@ -56,11 +56,21 @@ namespace NetOffice.Build
                             registryWrites.Add(registryWrite);
                         }
 
-                        var comClassKey = comClass.RegisterComClass(progId, guid, assembly);
+                        var comClassKey = comClass.RegisterComClassNative(progId, guid, assembly);
                         if (comClassKey != null)
                         {
                             var registryWrite = new TaskItem(comClassKey);
                             registryWrites.Add(registryWrite);
+                        }
+
+                        if (Environment.Is64BitOperatingSystem)
+                        {
+                            var comClassWOW6432Key = comClass.RegisterComClassWOW6432(progId, guid, assembly);
+                            if (comClassWOW6432Key != null)
+                            {
+                                var registryWrite = new TaskItem(comClassWOW6432Key);
+                                registryWrites.Add(registryWrite);
+                            }
                         }
                     }
                 }
