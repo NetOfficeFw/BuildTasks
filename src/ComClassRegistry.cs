@@ -43,6 +43,20 @@ namespace NetOffice.Build
             return null;
         }
 
+        public void DeleteProgId(string progId)
+        {
+            try
+            {
+                var registryPath = $@"Software\Classes\{progId}";
+                Log.LogMessage($@"Delete HKEY_CURRENT_USER\{registryPath}");
+                this.HkeyBase.DeleteSubKeyTree(registryPath, false);
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message);
+            }
+        }
+
         public string RegisterComClassNative(string progId, Guid guid, Assembly assembly)
         {
             return RegisterComClass(RegistryView.Registry64, @"", progId, guid, assembly);
@@ -83,6 +97,34 @@ namespace NetOffice.Build
             }
 
             return null;
+        }
+
+        public void DeleteComClassNative(Guid guid)
+        {
+            DeleteComClass(RegistryView.Registry64, @"", guid);
+        }
+
+        public void DeleteComClassWOW6432(Guid guid)
+        {
+            DeleteComClass(RegistryView.Registry64, @"WOW6432Node\", guid);
+        }
+
+        public void DeleteComClass(RegistryView view, string wow6432, Guid guid)
+        {
+            try
+            {
+                var guidValue = guid.ToRegistryString();
+
+                var registryPath = $@"Software\Classes\{wow6432}CLSID\{guidValue}";
+                Log.LogMessage($@"Delete HKEY_CURRENT_USER\{registryPath}");
+
+                using var hkeyBase = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, view);
+                hkeyBase.DeleteSubKeyTree(registryPath, false);
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message);
+            }
         }
     }
 }

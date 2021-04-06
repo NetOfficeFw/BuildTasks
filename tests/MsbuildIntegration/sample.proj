@@ -1,5 +1,6 @@
 <Project>
   <UsingTask TaskName="NetOffice.Build.RegisterAddin" AssemblyFile="$(MSBuildThisFileDirectory)NetOfficeBuildTasks.dll" />
+  <UsingTask TaskName="NetOffice.Build.CleanAddin" AssemblyFile="$(MSBuildThisFileDirectory)NetOfficeBuildTasks.dll" />
 
   <ItemGroup>
     <Library Include="$(MSBuildThisFileDirectory)AcmeCorpAddinNet46.dll" />
@@ -10,5 +11,6 @@
   </Target>
 
   <Target Name="Clean">
+    <CleanAddin AssemblyPath="@(Library)" />
   </Target>
 </Project>
