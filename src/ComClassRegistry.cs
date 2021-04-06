@@ -13,7 +13,7 @@ namespace NetOffice.Build
     {
         public ComClassRegistry(TaskLoggingHelper log)
         {
-            this.HkeyBase = Registry.CurrentUser;
+            this.HkeyBase = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry64);
             this.Log = log;
         }
 
@@ -59,19 +59,18 @@ namespace NetOffice.Build
 
         public string RegisterComClassNative(string progId, Guid guid, Assembly assembly)
         {
-            return RegisterComClass(RegistryView.Registry64, @"", progId, guid, assembly);
+            return RegisterComClass(@"", progId, guid, assembly);
         }
 
         public string RegisterComClassWOW6432(string progId, Guid guid, Assembly assembly)
         {
-            return RegisterComClass(RegistryView.Registry64, @"WOW6432Node\", progId, guid, assembly);
+            return RegisterComClass(@"WOW6432Node\", progId, guid, assembly);
         }
 
-        public string RegisterComClass(RegistryView view, string wow6432, string progId, Guid guid, Assembly assembly)
+        public string RegisterComClass(string wow6432, string progId, Guid guid, Assembly assembly)
         {
             try
             {
-                using var hkeyBase = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, view);
                 using var classes = this.HkeyBase.OpenSubKey($@"Software\Classes\{wow6432}CLSID", writable: true);
                 var guidValue = guid.ToRegistryString();
                 var clsidKey = classes.CreateSubKey(guidValue);
@@ -101,15 +100,15 @@ namespace NetOffice.Build
 
         public void DeleteComClassNative(Guid guid)
         {
-            DeleteComClass(RegistryView.Registry64, @"", guid);
+            DeleteComClass(@"", guid);
         }
 
         public void DeleteComClassWOW6432(Guid guid)
         {
-            DeleteComClass(RegistryView.Registry64, @"WOW6432Node\", guid);
+            DeleteComClass(@"WOW6432Node\", guid);
         }
 
-        public void DeleteComClass(RegistryView view, string wow6432, Guid guid)
+        public void DeleteComClass(string wow6432, Guid guid)
         {
             try
             {
@@ -118,8 +117,7 @@ namespace NetOffice.Build
                 var registryPath = $@"Software\Classes\{wow6432}CLSID\{guidValue}";
                 Log.LogMessage($@"Delete HKEY_CURRENT_USER\{registryPath}");
 
-                using var hkeyBase = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, view);
-                hkeyBase.DeleteSubKeyTree(registryPath, false);
+                this.HkeyBase.DeleteSubKeyTree(registryPath, false);
             }
             catch (Exception ex)
             {
