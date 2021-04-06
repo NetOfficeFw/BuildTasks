@@ -38,7 +38,7 @@ namespace NetOffice.Build
             }
             catch (Exception ex)
             {
-                Log.LogError(ex.Message);
+                Log.LogErrorFromException(ex);
             }
 
             return null;
@@ -54,7 +54,7 @@ namespace NetOffice.Build
             }
             catch (Exception ex)
             {
-                Log.LogError(ex.Message);
+                Log.LogErrorFromException(ex);
             }
         }
 
@@ -94,7 +94,7 @@ namespace NetOffice.Build
             }
             catch (Exception ex)
             {
-                Log.LogError(ex.Message);
+                Log.LogErrorFromException(ex);
             }
 
             return null;
@@ -123,7 +123,7 @@ namespace NetOffice.Build
             }
             catch (Exception ex)
             {
-                Log.LogError(ex.Message);
+                Log.LogErrorFromException(ex);
             }
         }
 
@@ -142,7 +142,7 @@ namespace NetOffice.Build
             }
             catch (Exception ex)
             {
-                Log.LogError(ex.Message);
+                Log.LogErrorFromException(ex);
             }
 
             return null;
@@ -159,7 +159,7 @@ namespace NetOffice.Build
             }
             catch (Exception ex)
             {
-                Log.LogError(ex.Message);
+                Log.LogErrorFromException(ex);
             }
         }
     }

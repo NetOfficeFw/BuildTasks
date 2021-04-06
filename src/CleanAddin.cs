@@ -60,7 +60,7 @@ namespace NetOffice.Build
             }
             catch (Exception ex)
             {
-                Log.LogError(ex.Message);
+                Log.LogErrorFromException(ex);
                 return false;
             }
 
