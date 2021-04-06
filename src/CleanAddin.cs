@@ -32,8 +32,7 @@ namespace NetOffice.Build
 
                         var guidComClass = guid.ToRegistryString();
 
-                        Log.LogMessage($@"Cleaning {progId} {guidComClass}");
-
+                        Log.LogMessage(MessageImportance.High, $@"Cleaning {progId} {guidComClass}");
 
                         var comClass = new ComClassRegistry(this.Log);
                         comClass.DeleteProgId(progId);

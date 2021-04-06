@@ -47,6 +47,8 @@ namespace NetOffice.Build
                         var itemWrite = new TaskItem(name, metadata);
                         addinTypes.Add(itemWrite);
 
+                        Log.LogMessage(MessageImportance.High, $@"Registering {progId} {guid.ToRegistryString()}");
+
                         var comClass = new ComClassRegistry(this.Log);
                         
                         var registeredKey = comClass.RegisterProgId(progId, guid);

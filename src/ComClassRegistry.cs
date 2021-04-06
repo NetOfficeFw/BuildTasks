@@ -33,6 +33,7 @@ namespace NetOffice.Build
                 var guidValue = guid.ToRegistryString();
                 guidKey.SetValue(null, guidValue);
 
+                Log.LogMessage($@"Created {progIdKey.Name}");
                 return progIdKey.Name;
             }
             catch (Exception ex)
@@ -88,6 +89,7 @@ namespace NetOffice.Build
                 inprocServer.SetValue("RuntimeVersion", "v4.0.30319");
                 inprocServer.SetValue("ThreadingModel", "Both");
 
+                Log.LogMessage($@"Created {clsidKey.Name}");
                 return clsidKey.Name;
             }
             catch (Exception ex)
