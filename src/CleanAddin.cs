@@ -12,6 +12,8 @@ namespace NetOffice.Build
         [Required]
         public ITaskItem AssemblyPath { get; set; }
 
+        public ITaskItem[] OfficeApps { get; set; }
+
         public override bool Execute()
         {
             try
@@ -24,11 +26,13 @@ namespace NetOffice.Build
 
                 foreach (var publicType in publicTypes)
                 {
-                    var isComVisible = IsComVisibleType(publicType);
+                    var isComVisible = publicType.IsComVisibleType();
+                    var isAddinType = publicType.IsComAddinType();
+
                     if (isComVisible)
                     {
                         var guid = publicType.GUID;
-                        var progId = GetProgId(publicType);
+                        var progId = publicType.GetProgId();
 
                         var guidComClass = guid.ToRegistryString();
 
@@ -42,6 +46,15 @@ namespace NetOffice.Build
                         {
                             comClass.DeleteComClassWOW6432(guid);
                         }
+
+                        if (isAddinType && this.OfficeApps != null)
+                        {
+                            foreach (var officeAppItem in this.OfficeApps)
+                            {
+                                var officeApp = officeAppItem.ItemSpec;
+                                comClass.DeleteOfficeAddin(officeApp, progId);
+                            }
+                        }
                     }
                 }
             }
@@ -52,18 +65,6 @@ namespace NetOffice.Build
             }
 
             return true;
-        }
-
-        private static bool IsComVisibleType(Type type)
-        {
-            var comVisibleAttribute = type.GetCustomAttribute<ComVisibleAttribute>();
-            return comVisibleAttribute?.Value ?? false;
-        }
-
-        private static string GetProgId(Type type)
-        {
-            var attr = type.GetCustomAttribute<ProgIdAttribute>();
-            return attr?.Value;
         }
     }
 }

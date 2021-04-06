@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using Microsoft.Build.Framework;
@@ -11,6 +12,8 @@ namespace NetOffice.Build
     {
         [Required]
         public ITaskItem AssemblyPath { get; set; }
+
+        public ITaskItem[] OfficeApps { get; set; }
 
         [Output]
         public ITaskItem[] AddinTypes { get; set; }
@@ -30,12 +33,14 @@ namespace NetOffice.Build
 
                 foreach (var publicType in publicTypes)
                 {
-                    var isComVisible = IsComVisibleType(publicType);
+                    var isComVisible = publicType.IsComVisibleType();
+                    var isAddinType = publicType.IsComAddinType();
+
                     if (isComVisible)
                     {
                         var name = publicType.Name;
                         var guid = publicType.GUID;
-                        var progId = GetProgId(publicType);
+                        var progId = publicType.GetProgId();
 
                         var metadata = new Dictionary<string,string>
                         {
@@ -74,6 +79,22 @@ namespace NetOffice.Build
                                 registryWrites.Add(registryWrite);
                             }
                         }
+
+                        if (isAddinType && this.OfficeApps != null)
+                        {
+                            foreach (var officeAppItem in this.OfficeApps)
+                            {
+                                var officeApp = officeAppItem.ItemSpec;
+                                Log.LogMessage(MessageImportance.High, $@"Registering for Office app {officeApp}");
+
+                                var addinKey = comClass.RegisterOfficeAddin(officeApp, progId);
+                                if (addinKey != null)
+                                {
+                                    var registryWrite = new TaskItem(addinKey);
+                                    registryWrites.Add(registryWrite);
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -87,18 +108,6 @@ namespace NetOffice.Build
             }
 
             return true;
-        }
-
-        private static bool IsComVisibleType(Type type)
-        {
-            var comVisibleAttribute = type.GetCustomAttribute<ComVisibleAttribute>();
-            return comVisibleAttribute?.Value ?? false;
-        }
-
-        private static string GetProgId(Type type)
-        {
-            var attr = type.GetCustomAttribute<ProgIdAttribute>();
-            return attr?.Value;
         }
     }
 }

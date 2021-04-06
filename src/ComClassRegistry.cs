@@ -126,5 +126,41 @@ namespace NetOffice.Build
                 Log.LogError(ex.Message);
             }
         }
+
+        public string RegisterOfficeAddin(string officeApp, string progId)
+        {
+            try
+            {
+                using var addinKey = this.HkeyBase.CreateSubKey($@"Software\Microsoft\Office\{officeApp}\Addins\{progId}", writable: true);
+
+                addinKey.SetValue("FriendlyName", progId);
+                addinKey.SetValue("Description", progId);
+                addinKey.SetValue("LoadBehavior", 3, RegistryValueKind.DWord);
+
+                Log.LogMessage($@"Created {addinKey.Name}");
+                return addinKey.Name;
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message);
+            }
+
+            return null;
+        }
+
+        public void DeleteOfficeAddin(string officeApp, string progId)
+        {
+            try
+            {
+                var registryPath = $@"Software\Microsoft\Office\{officeApp}\Addins\{progId}";
+                Log.LogMessage($@"Delete HKEY_CURRENT_USER\{registryPath}");
+
+                this.HkeyBase.DeleteSubKeyTree(registryPath, false);
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message);
+            }
+        }
     }
 }

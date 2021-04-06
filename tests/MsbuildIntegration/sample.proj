@@ -6,11 +6,18 @@
     <Library Include="$(MSBuildThisFileDirectory)AcmeCorpAddinNet46.dll" />
   </ItemGroup>
 
+  <ItemGroup>
+    <OfficeApps Include="Word" />
+    <OfficeApps Include="Excel" />
+    <OfficeApps Include="PowerPoint" />
+    <OfficeApps Include="Outlook" />
+  </ItemGroup>
+
   <Target Name="Build">
-    <RegisterAddin AssemblyPath="@(Library)" />
+    <RegisterAddin AssemblyPath="@(Library)" OfficeApps="@(OfficeApps)" />
   </Target>
 
   <Target Name="Clean">
-    <CleanAddin AssemblyPath="@(Library)" />
+    <CleanAddin AssemblyPath="@(Library)" OfficeApps="@(OfficeApps)" />
   </Target>
 </Project>
