@@ -32,3 +32,8 @@ jobs:
       run: msbuild $env:SolutionFile /restore /m /p:Configuration=$env:Configuration
       env:
         Configuration: ${{ matrix.configuration }}
+
+    - name: Tests
+      run: vstest.console.exe tests\NetOfficeBuildTasksTests\bin\${{matrix.configuration}}\net48\NetOfficeBuildTasksTests.dll
+      env:
+        Configuration: ${{ matrix.configuration }}
