@@ -13,7 +13,7 @@ namespace NetOffice.Build
         public void Execute_Test1()
         {
             // Arrange
-            var task = new RegisterAddin();
+            var task = CreateRegisterAddin();
             task.AssemblyPath = GetAsTaskItem("AcmeCorpAddinNet46.dll");
 
             // Act
@@ -27,7 +27,7 @@ namespace NetOffice.Build
         public void AddinTypes_Test1()
         {
             // Arrange
-            var task = new RegisterAddin();
+            var task = CreateRegisterAddin();
             task.AssemblyPath = GetAsTaskItem("AcmeCorpAddinNet46.dll");
 
             // Act
@@ -57,7 +57,7 @@ namespace NetOffice.Build
                 @"HKEY_CURRENT_USER\Software\Classes\WOW6432Node\CLSID\{70680B7A-09A3-43EE-85AE-E21D54A1C075}",
             };
 
-            var task = new RegisterAddin();
+            var task = CreateRegisterAddin();
             task.AssemblyPath = GetAsTaskItem("AcmeCorpAddinNet46.dll");
 
             // Act
@@ -68,6 +68,13 @@ namespace NetOffice.Build
 
             // Assert
             CollectionAssert.AreEquivalent(expectedRegistryPaths, actualRegistryPaths);
+        }
+
+        private static RegisterAddin CreateRegisterAddin()
+        {
+            var task = new RegisterAddin();
+            task.BuildEngine = new BuildEngineStub();
+            return task;
         }
 
         private ITaskItem GetAsTaskItem(string assemblyName)
