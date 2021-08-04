@@ -25,7 +25,7 @@ namespace NetOffice.Build
         {
             try
             {
-                using var classes = this.HkeyBase.OpenSubKey(@"Software\Classes", writable: true);
+                using var classes = this.HkeyBase.CreateSubKey(@"Software\Classes", writable: true);
                 var progIdKey = classes.CreateSubKey(progId);
                 progIdKey.SetValue(null, progId);
 
@@ -72,7 +72,7 @@ namespace NetOffice.Build
         {
             try
             {
-                using var classes = this.HkeyBase.OpenSubKey($@"Software\Classes\{wow6432}CLSID", writable: true);
+                using var classes = this.HkeyBase.CreateSubKey($@"Software\Classes\{wow6432}CLSID", writable: true);
                 var guidValue = guid.ToRegistryString();
                 var clsidKey = classes.CreateSubKey(guidValue);
 
