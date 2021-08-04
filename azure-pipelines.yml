@@ -19,6 +19,20 @@ strategy:
 steps:
 - task: NuGetToolInstaller@1
 
+# runtime v2.1 is required for AzureSignTool
+- task: UseDotNet@2
+  displayName: 'Use .NET Core 2.1 Runtime'
+  inputs:
+    packageType: runtime
+    version: '2.1.x'
+
+- task: DotNetCoreCLI@2
+  displayName: Install AzureSignTool
+  inputs:
+    command: 'custom'
+    custom: 'tool'
+    arguments: 'install --global azuresigntool'
+
 - task: NuGetCommand@2
   displayName: Restore Packages
   inputs:
@@ -38,3 +52,28 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
     testFiltercriteria: 'TestCategory!=IntegrationTests'
+
+- task: CmdLine@2
+  displayName: Sign
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['buildConfiguration'], 'Release'), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/heads/releases/')))
+  inputs:
+    workingDirectory: '$(Build.SourcesDirectory)\src\bin\$(buildConfiguration)'
+    script: |
+      AzureSignTool.exe sign ^
+      --file-digest sha256 ^
+      --description-url "https://github.com/NetOfficeFw/BuildTasks" ^
+      --no-page-hashing ^
+      --timestamp-rfc3161 http://timestamp.digicert.com ^
+      --timestamp-digest sha256 ^
+      --azure-key-vault-url https://opensourcesigning.vault.azure.net ^
+      --azure-key-vault-client-id "$(KeyVaultClientId)" ^
+      --azure-key-vault-client-secret "$(KeyVaultClientSecret)" ^
+      --azure-key-vault-certificate "goITSolutions-2020-10" ^
+      --verbose ^
+      NetOfficeBuildTasks.dll
+
+- task: PublishBuildArtifacts@1
+  condition: eq(variables['buildConfiguration'], 'Release')
+  inputs:
+    pathToPublish: '$(Build.SourcesDirectory)\src\bin\$(buildConfiguration)'
+    artifactName: NetOfficeBuildTasks
