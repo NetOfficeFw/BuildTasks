@@ -9,6 +9,10 @@ namespace NetOffice.Build
 {
     public class TypeExTests
     {
+        public const string AcmeCorpAddinNet48Assembly = "AcmeCorpAddinNet48.dll";
+        public const string AcmeAddinClass = "AcmeCorp.Net48Sample.AcmeAddin";
+        public const string AcmeAddinTaskpaneClass = "AcmeCorp.Net48Sample.AcmeTaskpane";
+
         [Test]
         public void IsComVisibleType_BasicClass_ReturnsFalse()
         {
@@ -39,8 +43,8 @@ namespace NetOffice.Build
         public void IsComVisibleType_ReflectionOnlyComClass_ReturnsTrue()
         {
             // Arrange
-            var assembly = ReflectionOnlyLoadAssembly("AcmeCorpAddinNet46.dll");
-            var type = assembly.GetType("AcmeCorp.Net46Sample.ConnectClass");
+            var assembly = ReflectionOnlyLoadAssembly(AcmeCorpAddinNet48Assembly);
+            var type = assembly.GetType(AcmeAddinClass);
 
             // Act
             var result = TypeEx.IsComVisibleType(type);
@@ -79,8 +83,8 @@ namespace NetOffice.Build
         public void IsComAddinType_ReflectionOnlyComClass_ReturnsTrue()
         {
             // Arrange
-            var assembly = ReflectionOnlyLoadAssembly("AcmeCorpAddinNet46.dll");
-            var type = assembly.GetType("AcmeCorp.Net46Sample.ConnectClass");
+            var assembly = ReflectionOnlyLoadAssembly(AcmeCorpAddinNet48Assembly);
+            var type = assembly.GetType(AcmeAddinClass);
 
             // Act
             var result = TypeEx.IsComAddinType(type);
@@ -117,19 +121,32 @@ namespace NetOffice.Build
         }
 
         [Test]
-        public void GetProgId_ReflectionOnlyComClass_ReturnsTrue()
+        public void GetProgId_ReflectionOnlyComClassWithProgIdAttribute_ReturnsTrue()
         {
             // Arrange
-            var assembly = ReflectionOnlyLoadAssembly("AcmeCorpAddinNet46.dll");
-            var type = assembly.GetType("AcmeCorp.Net46Sample.ConnectClass");
+            var assembly = ReflectionOnlyLoadAssembly(AcmeCorpAddinNet48Assembly);
+            var type = assembly.GetType(AcmeAddinClass);
 
             // Act
             var actualProgId = TypeEx.GetProgId(type);
 
             // Assert
-            Assert.AreEqual("AcmeCorp.Net46Sample.ConnectClass", actualProgId);
+            Assert.AreEqual("AcmeCorp.Net48Sample.AcmeAddin", actualProgId);
         }
 
+        [Test]
+        public void GetProgId_ReflectionOnlyComClassWithoutProgIdAttribute_ReturnsTrue()
+        {
+            // Arrange
+            var assembly = ReflectionOnlyLoadAssembly(AcmeCorpAddinNet48Assembly);
+            var type = assembly.GetType(AcmeAddinTaskpaneClass);
+
+            // Act
+            var actualProgId = TypeEx.GetProgId(type);
+
+            // Assert
+            Assert.AreEqual("AcmeCorp.Net48Sample.AcmeTaskpane", actualProgId);
+        }
 
         private Assembly ReflectionOnlyLoadAssembly(string assemblyName)
         {

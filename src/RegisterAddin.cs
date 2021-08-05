@@ -128,6 +128,14 @@ namespace NetOffice.Build
         {
             if (File.Exists(path))
             {
+                var assemblyName = AssemblyName.GetAssemblyName(path);
+                var assemblies = AppDomain.CurrentDomain.ReflectionOnlyGetAssemblies();
+                var existing = assemblies.FirstOrDefault(assembly => assembly.FullName == assemblyName.FullName);
+                if (existing != null)
+                {
+                    return existing;
+                }
+
                 var content = File.ReadAllBytes(path);
                 return Assembly.ReflectionOnlyLoad(content);
             }

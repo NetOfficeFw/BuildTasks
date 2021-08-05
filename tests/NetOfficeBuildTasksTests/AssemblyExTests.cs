@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Reflection;
 using NUnit.Framework;
 
@@ -11,7 +10,7 @@ namespace NetOffice.Build
         public void GetCodebase()
         {
             // Arrange
-            var assembly = LoadAssembly("AcmeCorpAddinNet46.dll");
+            var assembly = Assembly.GetExecutingAssembly();
 
             // Act
             var actualCodebase = assembly.GetCodebase();
@@ -19,13 +18,6 @@ namespace NetOffice.Build
             // Assert
             StringAssert.StartsWith("file:///", actualCodebase);
             StringAssert.DoesNotContain("\\", actualCodebase);
-        }
-
-        private Assembly LoadAssembly(string assemblyName)
-        {
-            var path = Path.Combine(TestContext.CurrentContext.TestDirectory, assemblyName);
-            var assembly = Assembly.LoadFrom(path);
-            return assembly;
         }
     }
 }
