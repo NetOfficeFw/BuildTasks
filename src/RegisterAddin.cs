@@ -61,7 +61,7 @@ namespace NetOffice.Build
                         var itemWrite = new TaskItem(name, metadata);
                         addinTypes.Add(itemWrite);
 
-                        Log.LogMessage(MessageImportance.High, $@"Registering {progId} {guid.ToRegistryString()}");
+                        Log.LogMessage(MessageImportance.High, $@"Registering {progId} class with guid {guid.ToRegistryString()}");
 
                         var comClass = new ComClassRegistry(this.Log);
                         
@@ -94,7 +94,7 @@ namespace NetOffice.Build
                             foreach (var officeAppItem in this.OfficeApps)
                             {
                                 var officeApp = officeAppItem.ItemSpec;
-                                Log.LogMessage(MessageImportance.High, $@"Registering for Office app {officeApp}");
+                                Log.LogMessage(MessageImportance.High, $@"Registering add-in {progId} to Microsoft Office application {officeApp}");
 
                                 var addinKey = comClass.RegisterOfficeAddin(officeApp, progId);
                                 if (addinKey != null)
