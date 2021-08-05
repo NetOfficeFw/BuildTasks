@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace NetOffice.Build
 {
     public static class TypeEx
     {
+        public static string ComVisibleAttributeName = typeof(ComVisibleAttribute).FullName;
+        public static string ProgIdAttributeName = typeof(ProgIdAttribute).FullName;
+
         public static bool IsComVisibleType(this Type type)
         {
-            var comVisibleAttribute = type.GetCustomAttribute<ComVisibleAttribute>();
-            return comVisibleAttribute?.Value ?? false;
+            var data = type.GetCustomAttributesData();
+            return data.Any(attr => attr.AttributeType.FullName == ComVisibleAttributeName);
         }
 
         public static bool IsComAddinType(this Type type)
@@ -21,8 +23,10 @@ namespace NetOffice.Build
 
         public static string GetProgId(this Type type)
         {
-            var attr = type.GetCustomAttribute<ProgIdAttribute>();
-            return attr?.Value;
+            var data = type.GetCustomAttributesData();
+            var attr = data.FirstOrDefault(attr => attr.AttributeType.FullName == ProgIdAttributeName);
+            var progIdArg = attr?.ConstructorArguments.FirstOrDefault();
+            return progIdArg?.Value as string ?? type.FullName;
         }
     }
 }

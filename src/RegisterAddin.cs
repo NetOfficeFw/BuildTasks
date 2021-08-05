@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Policy;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
@@ -22,9 +24,15 @@ namespace NetOffice.Build
 
         public override bool Execute()
         {
+            AppDomain domain = null;
             try
             {
-                var assembly = Assembly.LoadFile(this.AssemblyPath.ItemSpec);
+                var assemblyPath = this.AssemblyPath.ItemSpec;
+                var assemblyDir = Path.GetDirectoryName(assemblyPath);
+
+                AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += (sender, args) => ReflectionOnlyAssemblyResolve(args, assemblyDir);
+
+                var assembly = Assembly.ReflectionOnlyLoadFrom(assemblyPath);
                 var publicTypes = assembly.GetExportedTypes();
 
                 var addinTypes = new List<TaskItem>();
@@ -41,7 +49,7 @@ namespace NetOffice.Build
                         var guid = publicType.GUID;
                         var progId = publicType.GetProgId();
 
-                        var metadata = new Dictionary<string,string>
+                        var metadata = new Dictionary<string, string>
                         {
                             { "Namespace", publicType.Namespace },
                             { "Guid", guid.ToString("D") },
@@ -105,8 +113,34 @@ namespace NetOffice.Build
                 Log.LogErrorFromException(ex);
                 return false;
             }
+            finally
+            {
+                if (domain != null)
+                {
+                    AppDomain.Unload(domain);
+                }
+            }
 
             return true;
+        }
+
+        private Assembly ReflectionOnlyAssemblyResolve(ResolveEventArgs args, string baseDir)
+        {
+            Console.WriteLine($"Assembly: {args?.Name} by {args?.RequestingAssembly?.GetName()}");
+
+            var name = new AssemblyName(args.Name);
+            var path = Path.Combine(baseDir, name.Name + ".dll");
+            Assembly assembly = null;
+            if (File.Exists(path))
+            {
+                assembly = Assembly.ReflectionOnlyLoadFrom(path);
+            }
+            else
+            {
+                assembly = Assembly.ReflectionOnlyLoad(args.Name);
+            }
+
+            return assembly;
         }
     }
 }
