@@ -32,7 +32,7 @@ namespace NetOffice.Build
 
                 AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += (sender, args) => ReflectionOnlyAssemblyResolve(args, assemblyDir);
 
-                var assembly = Assembly.ReflectionOnlyLoadFrom(assemblyPath);
+                var assembly = ReflectionOnlyLoadAssembly(assemblyPath);
                 var publicTypes = assembly.GetExportedTypes();
 
                 var addinTypes = new List<TaskItem>();
@@ -124,6 +124,17 @@ namespace NetOffice.Build
             return true;
         }
 
+        private static Assembly ReflectionOnlyLoadAssembly(string path)
+        {
+            if (File.Exists(path))
+            {
+                var content = File.ReadAllBytes(path);
+                return Assembly.ReflectionOnlyLoad(content);
+            }
+
+            return null;
+        }
+
         private Assembly ReflectionOnlyAssemblyResolve(ResolveEventArgs args, string baseDir)
         {
             Console.WriteLine($"Assembly: {args?.Name} by {args?.RequestingAssembly?.GetName()}");
@@ -133,7 +144,7 @@ namespace NetOffice.Build
             Assembly assembly = null;
             if (File.Exists(path))
             {
-                assembly = Assembly.ReflectionOnlyLoadFrom(path);
+                assembly = ReflectionOnlyLoadAssembly(path);
             }
             else
             {
