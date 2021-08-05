@@ -33,6 +33,8 @@ namespace NetOffice.Build
                 AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += (sender, args) => ReflectionOnlyAssemblyResolve(args, assemblyDir);
 
                 var assembly = ReflectionOnlyLoadAssembly(assemblyPath);
+                var assemblyName = assembly.GetName();
+                var assemblyCodebase = assemblyPath.GetCodebase();
                 var publicTypes = assembly.GetExportedTypes();
 
                 var addinTypes = new List<TaskItem>();
@@ -70,7 +72,7 @@ namespace NetOffice.Build
                             registryWrites.Add(registryWrite);
                         }
 
-                        var comClassKey = comClass.RegisterComClassNative(progId, guid, assembly);
+                        var comClassKey = comClass.RegisterComClassNative(progId, guid, assemblyName, assemblyCodebase);
                         if (comClassKey != null)
                         {
                             var registryWrite = new TaskItem(comClassKey);
@@ -79,7 +81,7 @@ namespace NetOffice.Build
 
                         if (Environment.Is64BitOperatingSystem)
                         {
-                            var comClassWOW6432Key = comClass.RegisterComClassWOW6432(progId, guid, assembly);
+                            var comClassWOW6432Key = comClass.RegisterComClassWOW6432(progId, guid, assemblyName, assemblyCodebase);
                             if (comClassWOW6432Key != null)
                             {
                                 var registryWrite = new TaskItem(comClassWOW6432Key);

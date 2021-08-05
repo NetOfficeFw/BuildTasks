@@ -54,17 +54,17 @@ namespace NetOffice.Build
             }
         }
 
-        public string RegisterComClassNative(string progId, Guid guid, Assembly assembly)
+        public string RegisterComClassNative(string progId, Guid guid, AssemblyName assemblyName, string assemblyCodebase)
         {
-            return RegisterComClass(@"", progId, guid, assembly);
+            return RegisterComClass(@"", progId, guid, assemblyName, assemblyCodebase);
         }
 
-        public string RegisterComClassWOW6432(string progId, Guid guid, Assembly assembly)
+        public string RegisterComClassWOW6432(string progId, Guid guid, AssemblyName assemblyName, string assemblyCodebase)
         {
-            return RegisterComClass(@"WOW6432Node\", progId, guid, assembly);
+            return RegisterComClass(@"WOW6432Node\", progId, guid, assemblyName, assemblyCodebase);
         }
 
-        public string RegisterComClass(string wow6432, string progId, Guid guid, Assembly assembly)
+        public string RegisterComClass(string wow6432, string progId, Guid guid, AssemblyName assemblyName, string assemblyCodebase)
         {
             try
             {
@@ -79,9 +79,9 @@ namespace NetOffice.Build
 
                 var inprocServer = clsidKey.CreateSubKey("InprocServer32");
                 inprocServer.SetValue(null, "mscoree.dll");
-                inprocServer.SetValue("Assembly", assembly.GetName().FullName);
+                inprocServer.SetValue("Assembly", assemblyName.FullName);
                 inprocServer.SetValue("Class", progId);
-                inprocServer.SetValue("Codebase", assembly.GetCodebase());
+                inprocServer.SetValue("Codebase", assemblyCodebase);
                 inprocServer.SetValue("RuntimeVersion", "v4.0.30319");
                 inprocServer.SetValue("ThreadingModel", "Both");
 

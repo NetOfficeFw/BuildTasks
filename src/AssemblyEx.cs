@@ -7,7 +7,12 @@ namespace NetOffice.Build
     {
         public static string GetCodebase(this Assembly assembly)
         {
-            var path = assembly.Location.Replace('\\', '/');
+            return GetCodebase(assembly.Location);
+        }
+
+        public static string GetCodebase(this string path)
+        {
+            path = path.Replace('\\', '/');
             return $"file:///{path}";
         }
     }
