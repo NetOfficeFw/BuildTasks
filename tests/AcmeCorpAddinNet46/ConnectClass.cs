@@ -11,12 +11,12 @@ namespace AcmeCorp.Net46Sample
 
     public class ConnectClass : IDTExtensibility2
     {
-        public void OnConnection(object Application, ext_ConnectMode ConnectMode, object AddInInst, ref Array custom)
+        public void OnConnection(object application, ext_ConnectMode connectMode, object addInInst, ref Array custom)
         {
             Trace.WriteLine("AcmeCorp ConnectClass::OnConnection");
         }
 
-        public void OnDisconnection(ext_DisconnectMode RemoveMode, ref Array custom)
+        public void OnDisconnection(ext_DisconnectMode removeMode, ref Array custom)
         {
             Trace.WriteLine("AcmeCorp ConnectClass::OnDisconnection");
         }
