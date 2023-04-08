@@ -13,27 +13,27 @@ namespace AcmeCorp.Net46Sample
     {
         public void OnConnection(object application, ext_ConnectMode connectMode, object addInInst, ref Array custom)
         {
-            Trace.WriteLine("AcmeCorp ConnectClass::OnConnection");
+            Trace.WriteLine("AcmeCorp ConnectClass::OnConnection (.NET Framework 4.6.2)");
         }
 
         public void OnDisconnection(ext_DisconnectMode removeMode, ref Array custom)
         {
-            Trace.WriteLine("AcmeCorp ConnectClass::OnDisconnection");
+            Trace.WriteLine("AcmeCorp ConnectClass::OnDisconnection (.NET Framework 4.6.2)");
         }
 
         public void OnAddInsUpdate(ref Array custom)
         {
-            Trace.WriteLine("AcmeCorp ConnectClass::OnAddInsUpdate");
+            Trace.WriteLine("AcmeCorp ConnectClass::OnAddInsUpdate (.NET Framework 4.6.2)");
         }
 
         public void OnStartupComplete(ref Array custom)
         {
-            Trace.WriteLine("AcmeCorp ConnectClass::OnStartupComplete");
+            Trace.WriteLine("AcmeCorp ConnectClass::OnStartupComplete (.NET Framework 4.6.2)");
         }
 
         public void OnBeginShutdown(ref Array custom)
         {
-            Trace.WriteLine("AcmeCorp ConnectClass::OnBeginShutdown");
+            Trace.WriteLine("AcmeCorp ConnectClass::OnBeginShutdown (.NET Framework 4.6.2)");
         }
     }
 }

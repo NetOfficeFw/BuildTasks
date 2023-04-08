@@ -2,7 +2,7 @@
   <PropertyGroup>
     <RootNamespace>AcmeCorp.Net46Sample</RootNamespace>
     <AssemblyName>AcmeCorpAddinNet46</AssemblyName>
-    <TargetFramework>net46</TargetFramework>
+    <TargetFramework>net462</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>

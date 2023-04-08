@@ -12,27 +12,27 @@ namespace AcmeCorp.Net48Sample
     {
         public void OnConnection(object application, ext_ConnectMode connectMode, object addInInst, ref Array custom)
         {
-            Trace.WriteLine("AcmeCorp AcmeAddin::OnConnection");
+            Trace.WriteLine("AcmeCorp AcmeAddin::OnConnection (.NET Framework 4.8)");
         }
 
         public void OnDisconnection(ext_DisconnectMode removeMode, ref Array custom)
         {
-            Trace.WriteLine("AcmeCorp AcmeAddin::OnDisconnection");
+            Trace.WriteLine("AcmeCorp AcmeAddin::OnDisconnection (.NET Framework 4.8)");
         }
 
         public void OnAddInsUpdate(ref Array custom)
         {
-            Trace.WriteLine("AcmeCorp AcmeAddin::OnAddInsUpdate");
+            Trace.WriteLine("AcmeCorp AcmeAddin::OnAddInsUpdate (.NET Framework 4.8)");
         }
 
         public void OnStartupComplete(ref Array custom)
         {
-            Trace.WriteLine("AcmeCorp AcmeAddin::OnStartupComplete");
+            Trace.WriteLine("AcmeCorp AcmeAddin::OnStartupComplete (.NET Framework 4.8)");
         }
 
         public void OnBeginShutdown(ref Array custom)
         {
-            Trace.WriteLine("AcmeCorp AcmeAddin::OnBeginShutdown");
+            Trace.WriteLine("AcmeCorp AcmeAddin::OnBeginShutdown (.NET Framework 4.8)");
         }
     }
 }
