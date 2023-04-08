@@ -2,7 +2,7 @@ name: build
 
 on:
   push:
-    branches: [ main, build ]
+    branches: [ main, nuspec ]
   pull_request:
     branches: [ main ]
 
@@ -34,3 +34,12 @@ jobs:
 
     - name: build
       run: dotnet build
+
+    - name: pack
+      run: dotnet pack src/NetOfficeFw.Build.csproj
+
+    - name: archive
+      uses: actions/upload-artifact@v3
+      with:
+        name: NetOfficeFw.Build.nupkg
+        path: src/bin/${{ matrix.configuration }}/NetOfficeFw.Build.*.nupkg
