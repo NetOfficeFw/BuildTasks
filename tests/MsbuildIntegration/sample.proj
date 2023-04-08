@@ -6,6 +6,10 @@
     <Library Include="$(MSBuildThisFileDirectory)AcmeCorpAddinNet46.dll" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <OfficeAppAddin>Word;Excel;PowerPoint;Outlook;Access</OfficeAppAddin>
+  </PropertyGroup>
+
   <ItemGroup>
     <OfficeApps Include="Word" />
     <OfficeApps Include="Excel" />
