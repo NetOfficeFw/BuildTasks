@@ -1,6 +1,6 @@
 <Project>
-  <UsingTask TaskName="NetOffice.Build.RegisterAddin" AssemblyFile="$(MSBuildThisFileDirectory)NetOfficeBuildTasks.dll" />
-  <UsingTask TaskName="NetOffice.Build.CleanAddin" AssemblyFile="$(MSBuildThisFileDirectory)NetOfficeBuildTasks.dll" />
+  <UsingTask TaskName="NetOfficeFw.Build.RegisterAddin" AssemblyFile="$(MSBuildThisFileDirectory)NetOfficeFw.Build.dll" />
+  <UsingTask TaskName="NetOfficeFw.Build.CleanAddin" AssemblyFile="$(MSBuildThisFileDirectory)NetOfficeFw.Build.dll" />
 
   <ItemGroup>
     <Library Include="$(MSBuildThisFileDirectory)AcmeCorpAddinNet46.dll" />

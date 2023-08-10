@@ -6,7 +6,7 @@
 
     <IsPackable>false</IsPackable>
 
-    <RootNamespace>NetOffice.Build</RootNamespace>
+    <RootNamespace>NetOfficeFw.Build</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\NetOfficeBuildTasks.csproj" />
+    <ProjectReference Include="..\..\src\NetOfficeFw.Build.csproj" />
     <ProjectReference Include="..\AcmeCorpAddinNet46\AcmeCorpAddinNet46.csproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <OutputItemType>Content</OutputItemType>

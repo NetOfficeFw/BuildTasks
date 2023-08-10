@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using Extensibility;
 using NUnit.Framework;
 
-namespace NetOffice.Build
+namespace NetOfficeFw.Build
 {
     public class TypeExTests
     {
@@ -104,7 +104,7 @@ namespace NetOffice.Build
             var actualProgId = TypeEx.GetProgId(type);
 
             // Assert
-            Assert.AreEqual("NetOffice.Build.BasicClass", actualProgId);
+            Assert.AreEqual("NetOfficeFw.Build.BasicClass", actualProgId);
         }
 
         [Test]

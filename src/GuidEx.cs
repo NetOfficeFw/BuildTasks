@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NetOffice.Build
+namespace NetOfficeFw.Build
 {
     public static class GuidEx
     {

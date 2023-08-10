@@ -7,7 +7,7 @@ using System.Security.Policy;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-namespace NetOffice.Build
+namespace NetOfficeFw.Build
 {
     public class RegisterAddin : Task
     {

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Runtime.InteropServices;
 
-namespace NetOffice.Build
+namespace NetOfficeFw.Build
 {
     public static class TypeEx
     {

@@ -2,7 +2,7 @@
 using System.Reflection;
 using NUnit.Framework;
 
-namespace NetOffice.Build
+namespace NetOfficeFw.Build
 {
     public class AssemblyExTests
     {
