@@ -30,9 +30,9 @@ namespace NetOffice.Build
                 var assemblyPath = this.AssemblyPath.ItemSpec;
                 var assemblyDir = Path.GetDirectoryName(assemblyPath);
 
-                AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += (sender, args) => ReflectionOnlyAssemblyResolve(args, assemblyDir);
+                AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += (sender, args) => AssemblyEx.ReflectionOnlyAssemblyResolve(args, assemblyDir);
 
-                var assembly = ReflectionOnlyLoadAssembly(assemblyPath);
+                var assembly = AssemblyEx.ReflectionOnlyLoadAssembly(assemblyPath);
                 var assemblyName = assembly.GetName();
                 var assemblyCodebase = assemblyPath.GetCodebase();
                 var publicTypes = assembly.GetExportedTypes();
@@ -64,7 +64,7 @@ namespace NetOffice.Build
                         Log.LogMessage(MessageImportance.High, $@"Registering {progId} class with guid {guid.ToRegistryString()}");
 
                         var comClass = new ComClassRegistry(this.Log);
-                        
+
                         var registeredKey = comClass.RegisterProgId(progId, guid);
                         if (registeredKey != null)
                         {
@@ -124,44 +124,6 @@ namespace NetOffice.Build
             }
 
             return true;
-        }
-
-        private static Assembly ReflectionOnlyLoadAssembly(string path)
-        {
-            if (File.Exists(path))
-            {
-                var assemblyName = AssemblyName.GetAssemblyName(path);
-                var assemblies = AppDomain.CurrentDomain.ReflectionOnlyGetAssemblies();
-                var existing = assemblies.FirstOrDefault(assembly => assembly.FullName == assemblyName.FullName);
-                if (existing != null)
-                {
-                    return existing;
-                }
-
-                var content = File.ReadAllBytes(path);
-                return Assembly.ReflectionOnlyLoad(content);
-            }
-
-            return null;
-        }
-
-        private Assembly ReflectionOnlyAssemblyResolve(ResolveEventArgs args, string baseDir)
-        {
-            Console.WriteLine($"Assembly: {args?.Name} by {args?.RequestingAssembly?.GetName()}");
-
-            var name = new AssemblyName(args.Name);
-            var path = Path.Combine(baseDir, name.Name + ".dll");
-            Assembly assembly = null;
-            if (File.Exists(path))
-            {
-                assembly = ReflectionOnlyLoadAssembly(path);
-            }
-            else
-            {
-                assembly = Assembly.ReflectionOnlyLoad(args.Name);
-            }
-
-            return assembly;
         }
     }
 }
