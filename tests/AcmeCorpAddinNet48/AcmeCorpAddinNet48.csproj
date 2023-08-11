@@ -9,7 +9,9 @@
     <OfficeApps Include="Word" />
   </ItemGroup>
 
+  <!--
   <ItemGroup>
     <PackageReference Include="NetOfficeFw.Build" Version="2.0.0" />
   </ItemGroup>
+  -->
 </Project>
