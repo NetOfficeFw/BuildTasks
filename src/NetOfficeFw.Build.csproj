@@ -26,6 +26,9 @@
     <PackageTags>MSBuild Tasks Office addin extensions NetOffice</PackageTags>
     <DevelopmentDependency>true</DevelopmentDependency>
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+
+    <!-- NU5100: this package is build tasks only and does not contain anyreferencable libraries -->
+    <NoWarn>NU5100</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
