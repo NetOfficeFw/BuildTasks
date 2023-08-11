@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
@@ -17,11 +15,10 @@ namespace NetOffice.Build
         {
             try
             {
-                var assembly = Assembly.LoadFile(this.AssemblyPath.ItemSpec);
-                var publicTypes = assembly.GetExportedTypes();
+                var assemblyPath = this.AssemblyPath.ItemSpec;
 
-                var addinTypes = new List<TaskItem>();
-                var registryWrites = new List<TaskItem>();
+                var assembly = AssemblyEx.ReflectionOnlyLoadAssembly(assemblyPath);
+                var publicTypes = assembly.GetExportedTypes();
 
                 foreach (var publicType in publicTypes)
                 {
@@ -51,6 +48,7 @@ namespace NetOffice.Build
                             foreach (var officeAppItem in this.OfficeApps)
                             {
                                 var officeApp = officeAppItem.ItemSpec;
+                                Log.LogMessage(MessageImportance.High, $@"Cleaning add-in {progId} from Microsoft Office application {officeApp}");
                                 comClass.DeleteOfficeAddin(officeApp, progId);
                             }
                         }
