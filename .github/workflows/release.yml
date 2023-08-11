@@ -1,0 +1,57 @@
+name: release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release:
+    runs-on: windows-2022
+
+    env:
+      Configuration: 'Release'
+      VersionSuffix: ''
+
+    steps:
+    - name: checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: setup dotnet
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6
+
+    - name: setup msbuild
+      uses: microsoft/setup-msbuild@v1
+      
+    - name: setup NuGetKeyVaultSignTool
+      run: dotnet tool install --verbosity minimal --global NuGetKeyVaultSignTool --version 3.2.3
+
+    - name: build
+      run: dotnet build -c ${{ env.Configuration }}
+
+    - name: pack
+      run: dotnet pack --no-build --no-restore src/NetOfficeFw.Build.csproj -c ${{ env.Configuration }} -o dist
+
+    - name: sign package
+      run: |
+          NuGetKeyVaultSignTool.exe sign *.nupkg `
+          --file-digest sha256 `
+          --timestamp-rfc3161 http://timestamp.digicert.com `
+          --timestamp-digest sha256 `
+          --azure-key-vault-url https://opensourcesigning.vault.azure.net `
+          --azure-key-vault-tenant-id "${{ secrets.KEYVAULT_TENANT_ID }}" `
+          --azure-key-vault-client-id "${{ secrets.KEYVAULT_CLIENT_ID }}" `
+          --azure-key-vault-client-secret "${{ secrets.KEYVAULT_CLIENT_SECRET }}" `
+          --azure-key-vault-certificate "goITSolutions-until-2024-01"
+      working-directory: '${{ github.workspace}}\dist'
+
+    - name: publish package
+      if: success()
+      run: dotnet nuget push *.nupkg --api-key $env:NUGET_TOKEN --source https://api.nuget.org/v3/index.json
+      working-directory: '${{ github.workspace}}\dist'
+      env:
+        NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
