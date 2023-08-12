@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
@@ -16,6 +17,9 @@ namespace NetOffice.Build
             try
             {
                 var assemblyPath = this.AssemblyPath.ItemSpec;
+                var assemblyDir = Path.GetDirectoryName(assemblyPath);
+
+                AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += (sender, args) => AssemblyEx.ReflectionOnlyAssemblyResolve(args, assemblyDir);
 
                 var assembly = AssemblyEx.ReflectionOnlyLoadAssembly(assemblyPath);
                 var publicTypes = assembly.GetExportedTypes();
