@@ -1,0 +1,14 @@
+{
+  "default": true,
+  "first-line-heading": false,
+  "no-multiple-blanks": {
+    "maximum": 2
+  },
+  "line-length": {
+    "line_length": 120,
+    "strict": false
+  },
+  "blanks-around-fences": {
+    "list_items": false
+  }
+}
