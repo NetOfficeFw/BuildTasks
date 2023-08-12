@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project TreatAsLocalProperty="TaskTargetFramework;TaskAssembly">
+  <PropertyGroup>
+    <NetOfficeBuildTaskVersion>2.0.0</NetOfficeBuildTaskVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TaskTargetFramework>net462</TaskTargetFramework>
+    <TaskAssembly>$(MSBuildThisFileDirectory)..\tasks\$(TaskTargetFramework)\NetOfficeFw.Build.dll</TaskAssembly>
+  </PropertyGroup>
+
+  <UsingTask TaskName="NetOfficeFw.Build.RegisterAddin" AssemblyFile="$(TaskAssembly)" />
+  <UsingTask TaskName="NetOfficeFw.Build.CleanAddin" AssemblyFile="$(TaskAssembly)" />
+</Project>
