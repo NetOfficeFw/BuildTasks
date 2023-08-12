@@ -2,7 +2,7 @@
 using System.Collections;
 using NUnit.Framework;
 
-namespace NetOffice.Build
+namespace NetOfficeFw.Build
 {
     public class GuidExTests
     {

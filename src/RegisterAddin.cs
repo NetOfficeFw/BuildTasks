@@ -7,7 +7,7 @@ using System.Security.Policy;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-namespace NetOffice.Build
+namespace NetOfficeFw.Build
 {
     public class RegisterAddin : Task
     {
@@ -61,7 +61,7 @@ namespace NetOffice.Build
                         var itemWrite = new TaskItem(name, metadata);
                         addinTypes.Add(itemWrite);
 
-                        Log.LogMessage(MessageImportance.High, $@"Registering {progId} class with guid {guid.ToRegistryString()}");
+                        Log.LogMessage(MessageImportance.High, $@"Registering class {progId} with GUID {guid.ToRegistryString()}");
 
                         var comClass = new ComClassRegistry(this.Log);
 
@@ -94,7 +94,7 @@ namespace NetOffice.Build
                             foreach (var officeAppItem in this.OfficeApps)
                             {
                                 var officeApp = officeAppItem.ItemSpec;
-                                Log.LogMessage(MessageImportance.High, $@"Registering add-in {progId} to Microsoft Office application {officeApp}");
+                                Log.LogMessage(MessageImportance.High, $@"Registering add-in {progId} to Microsoft Office {officeApp}");
 
                                 var addinKey = comClass.RegisterOfficeAddin(officeApp, progId);
                                 if (addinKey != null)

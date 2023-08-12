@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace NetOffice.Build
+namespace NetOfficeFw.Build
 {
     public static class AssemblyEx
     {

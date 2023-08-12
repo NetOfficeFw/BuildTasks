@@ -3,7 +3,7 @@ using System.IO;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-namespace NetOffice.Build
+namespace NetOfficeFw.Build
 {
     public class CleanAddin : Task
     {
@@ -36,7 +36,7 @@ namespace NetOffice.Build
 
                         var guidComClass = guid.ToRegistryString();
 
-                        Log.LogMessage(MessageImportance.High, $@"Cleaning {progId} {guidComClass}");
+                        Log.LogMessage(MessageImportance.High, $@"Cleaning class {progId} with GUID {guidComClass}");
 
                         var comClass = new ComClassRegistry(this.Log);
                         comClass.DeleteProgId(progId);
@@ -52,7 +52,7 @@ namespace NetOffice.Build
                             foreach (var officeAppItem in this.OfficeApps)
                             {
                                 var officeApp = officeAppItem.ItemSpec;
-                                Log.LogMessage(MessageImportance.High, $@"Cleaning add-in {progId} from Microsoft Office application {officeApp}");
+                                Log.LogMessage(MessageImportance.High, $@"Cleaning add-in {progId} from Microsoft Office {officeApp}");
                                 comClass.DeleteOfficeAddin(officeApp, progId);
                             }
                         }

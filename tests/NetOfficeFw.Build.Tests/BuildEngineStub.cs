@@ -3,7 +3,7 @@ using System.Collections;
 using Microsoft.Build.Framework;
 using NUnit.Framework;
 
-namespace NetOffice.Build
+namespace NetOfficeFw.Build
 {
     class BuildEngineStub : IBuildEngine
     {

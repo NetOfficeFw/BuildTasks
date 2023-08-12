@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+  <!--
+    ============================================================
+        NetOfficeRegisterAddin
+
+    Register NetOffice addin library in target Microsoft Office application.
+
+    Inputs: OfficeAddinTarget item group
+    ============================================================
+    -->
+  <Target Name="NetOfficeRegisterAddin" AfterTargets="UnmanagedRegistration">
+    <!--
+      This target is executed as part of the build pipelines after the UnmanagedRegistration target.
+
+      <PropertyGroup>
+        <CoreBuildDependsOn>
+          ...
+          Compile;
+          ...
+          PrepareForRun;
+          UnmanagedRegistration;
+          ...
+        </CoreBuildDependsOn>
+      </PropertyGroup>
+    -->
+    <ItemGroup>
+      <NetOfficeTargetOfficeApps Include="$(OfficeAppAddin)" KeepDuplicates="false" />
+    </ItemGroup>
+
+    <Message Text="Registering add-in to Microsoft Office @(NetOfficeTargetOfficeApps, ', ')" Importance="High" />
+
+    <RegisterAddin AssemblyPath="$(TargetPath)" OfficeApps="@(NetOfficeTargetOfficeApps)" />
+  </Target>
+
+
+  <!--
+    ============================================================
+        NetOfficeCleanAddin
+
+    Clean up NetOffice addin library from target Microsoft Office application.
+
+    Inputs: OfficeAddinTarget item group
+    ============================================================
+    -->
+  <Target Name="NetOfficeCleanAddin" BeforeTargets="UnmanagedUnregistration">
+    <!--
+      This target is executed as part of the Clean pipelines before the UnmanagedUnregistration target.
+
+      <PropertyGroup>
+        <CleanDependsOn>
+          BeforeClean;
+          UnmanagedUnregistration;
+          CoreClean;
+          ...
+        </CleanDependsOn>
+      </PropertyGroup>
+    -->
+    <ItemGroup>
+      <NetOfficeTargetOfficeApps Include="$(OfficeAppAddin)" KeepDuplicates="false" />
+    </ItemGroup>
+
+    <Message Text="Cleaning add-in from Microsoft Office @(NetOfficeTargetOfficeApps, ', ')" Importance="High" />
+
+    <CleanAddin AssemblyPath="$(TargetPath)" OfficeApps="@(NetOfficeTargetOfficeApps)" Condition=" Exists('$(TargetPath)')" />
+  </Target>
+
+</Project>

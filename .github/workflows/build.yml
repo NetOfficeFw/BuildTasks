@@ -2,7 +2,7 @@ name: build
 
 on:
   push:
-    branches: [ main, build ]
+    branches: [ main, nuspec ]
   pull_request:
     branches: [ main ]
 
@@ -17,6 +17,7 @@ jobs:
 
     env:
       Configuration: ${{ matrix.configuration }}
+      VersionSuffix: 'preview-${{ github.run_number }}'
 
     steps:
     - name: checkout
@@ -33,4 +34,17 @@ jobs:
       uses: microsoft/setup-msbuild@v1
 
     - name: build
-      run: dotnet build
+      run: dotnet build -c ${{ env.Configuration }}
+
+    - name: test
+      run: dotnet test --no-build --no-restore -c ${{ env.Configuration }}
+
+    - name: pack
+      run: dotnet pack --no-build --no-restore src/NetOfficeFw.Build.csproj -c ${{ env.Configuration }} -o dist
+
+    - name: archive
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: NetOfficeFw.Build-${{ env.VersionSuffix }}.nupkg
+        path: dist/NetOfficeFw.Build.*.nupkg

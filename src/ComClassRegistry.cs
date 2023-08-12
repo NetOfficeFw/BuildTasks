@@ -3,7 +3,7 @@ using System.Reflection;
 using Microsoft.Build.Utilities;
 using Microsoft.Win32;
 
-namespace NetOffice.Build
+namespace NetOfficeFw.Build
 {
     public class ComClassRegistry
     {
