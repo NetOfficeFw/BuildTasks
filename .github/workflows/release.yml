@@ -5,6 +5,10 @@ on:
     tags:
       - 'v*.*.*'
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   release:
     runs-on: windows-2022
@@ -22,13 +26,20 @@ jobs:
     - name: setup dotnet
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 6
+        dotnet-version: 8
 
     - name: setup msbuild
       uses: microsoft/setup-msbuild@v2
-      
-    - name: setup NuGetKeyVaultSignTool
-      run: dotnet tool install --verbosity minimal --global NuGetKeyVaultSignTool --version 3.2.3
+
+    - name: azure login
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.TRUSTED_SIGNING_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    - name: setup dotnet sign
+      run: dotnet tool install --tool-path . --prerelease sign
 
     - name: build
       run: dotnet build -c ${{ env.Configuration }}
@@ -36,18 +47,17 @@ jobs:
     - name: pack
       run: dotnet pack --no-build --no-restore src/NetOfficeFw.Build.csproj -c ${{ env.Configuration }} -o dist
 
-    - name: sign package
-      run: |
-          NuGetKeyVaultSignTool.exe sign *.nupkg `
-          --file-digest sha256 `
-          --timestamp-rfc3161 http://timestamp.digicert.com `
-          --timestamp-digest sha256 `
-          --azure-key-vault-url https://opensourcesigning.vault.azure.net `
-          --azure-key-vault-tenant-id "${{ secrets.KEYVAULT_TENANT_ID }}" `
-          --azure-key-vault-client-id "${{ secrets.KEYVAULT_CLIENT_ID }}" `
-          --azure-key-vault-client-secret "${{ secrets.KEYVAULT_CLIENT_SECRET }}" `
-          --azure-key-vault-certificate "goITSolutions-until-2024-01"
-      working-directory: '${{ github.workspace}}\dist'
+    - name: sign
+      run: >
+        ./sign code trusted-signing
+        **/*.nupkg
+        --base-directory "${{ github.workspace }}/dist"
+        --publisher-name "NetOffice"
+        --description "NetOffice Build Tasks"
+        --description-url "https://github.com/NetOfficeFw/BuildTasks/"
+        --trusted-signing-endpoint "https://weu.codesigning.azure.net/"
+        --trusted-signing-account "OpenSourceSigning"
+        --trusted-signing-certificate-profile "JozefIzsoOpenSourceProfile"
 
     - name: publish package
       if: success()
