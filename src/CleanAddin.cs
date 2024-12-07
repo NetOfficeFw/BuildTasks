@@ -1,11 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 namespace NetOfficeFw.Build
 {
-    public class CleanAddin : Task
+    public class CleanAddin : AppDomainIsolatedTask
     {
         [Required]
         public ITaskItem AssemblyPath { get; set; }
@@ -19,9 +20,7 @@ namespace NetOfficeFw.Build
                 var assemblyPath = this.AssemblyPath.ItemSpec;
                 var assemblyDir = Path.GetDirectoryName(assemblyPath);
 
-                AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += (sender, args) => AssemblyEx.ReflectionOnlyAssemblyResolve(args, assemblyDir);
-
-                var assembly = AssemblyEx.ReflectionOnlyLoadAssembly(assemblyPath);
+                var assembly = Assembly.UnsafeLoadFrom(assemblyPath);
                 var publicTypes = assembly.GetExportedTypes();
 
                 foreach (var publicType in publicTypes)
