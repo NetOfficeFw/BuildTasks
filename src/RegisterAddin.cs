@@ -5,11 +5,12 @@ using System.Linq;
 using System.Reflection;
 using System.Security.Policy;
 using Microsoft.Build.Framework;
+using Microsoft.Build.Tasks;
 using Microsoft.Build.Utilities;
 
 namespace NetOfficeFw.Build
 {
-    public class RegisterAddin : Task
+    public class RegisterAddin : AppDomainIsolatedTask
     {
         [Required]
         public ITaskItem AssemblyPath { get; set; }
@@ -24,15 +25,12 @@ namespace NetOfficeFw.Build
 
         public override bool Execute()
         {
-            AppDomain domain = null;
             try
             {
                 var assemblyPath = this.AssemblyPath.ItemSpec;
                 var assemblyDir = Path.GetDirectoryName(assemblyPath);
 
-                AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += (sender, args) => AssemblyEx.ReflectionOnlyAssemblyResolve(args, assemblyDir);
-
-                var assembly = AssemblyEx.ReflectionOnlyLoadAssembly(assemblyPath);
+                var assembly = Assembly.UnsafeLoadFrom(assemblyPath);
                 var assemblyName = assembly.GetName();
                 var assemblyCodebase = assemblyPath.GetCodebase();
                 var publicTypes = assembly.GetExportedTypes();
@@ -114,13 +112,6 @@ namespace NetOfficeFw.Build
             {
                 Log.LogErrorFromException(ex);
                 return false;
-            }
-            finally
-            {
-                if (domain != null)
-                {
-                    AppDomain.Unload(domain);
-                }
             }
 
             return true;
