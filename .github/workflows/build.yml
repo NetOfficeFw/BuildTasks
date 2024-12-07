@@ -2,7 +2,6 @@ name: build
 
 on:
   push:
-    branches: [ main, nuspec ]
   pull_request:
     branches: [ main ]
 
@@ -21,17 +20,17 @@ jobs:
 
     steps:
     - name: checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
     - name: setup dotnet
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 6
+        dotnet-version: 8
 
     - name: setup msbuild
-      uses: microsoft/setup-msbuild@v1
+      uses: microsoft/setup-msbuild@v2
 
     - name: build
       run: dotnet build -c ${{ env.Configuration }}
@@ -44,7 +43,7 @@ jobs:
 
     - name: archive
       if: always()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: NetOfficeFw.Build-${{ env.VersionSuffix }}.nupkg
+        name: NetOfficeFw.Build-${{ env.VersionSuffix }}.${{ matrix.configuration }}.nupkg
         path: dist/NetOfficeFw.Build.*.nupkg
