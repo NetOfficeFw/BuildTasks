@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project TreatAsLocalProperty="TaskTargetFramework;TaskAssembly">
   <PropertyGroup>
-    <NetOfficeBuildTaskVersion>2.0.0</NetOfficeBuildTaskVersion>
+    <NetOfficeBuildTaskVersion>2.1.0</NetOfficeBuildTaskVersion>
   </PropertyGroup>
 
   <PropertyGroup>

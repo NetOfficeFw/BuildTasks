@@ -33,7 +33,7 @@ _The .NET Core assemblies are not supported yet._
       </PropertyGroup>
 
       <ItemGroup>
-        <PackageReference Include="NetOfficeFw.Build" Version="2.0.0" />
+        <PackageReference Include="NetOfficeFw.Build" Version="2.1.0" />
       </ItemGroup>
     </Project>
     ```
