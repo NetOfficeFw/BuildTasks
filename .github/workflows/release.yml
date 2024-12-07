@@ -11,6 +11,8 @@ permissions:
 
 jobs:
   release:
+    environment: production
+
     runs-on: windows-2022
 
     env:
