@@ -1,17 +1,20 @@
-NetOffice build tasks helps your with development of Microsoft Office add-ins.
+NetOffice build tasks help your with development of Microsoft Office add-ins.
 
 Use `NetOfficeFw.Build` to automatically register and cleanup your add-ins
 when developing Office extensions.
 
-Add-in are registered to your user profile and it does not require running
-with administrator rights.
+Add-ins are registered to your user profile and the registration does not require
+administrator rights.
 
 
 ### Supported Projects
 
 NetOffice build tasks support .NET Framework projects in classic and modern format.  
 You can use `packages.config` or `<PackageReference>` in your project.  
-Supported .NET Frameworks are 4.5.2, 4.6.2 and 4.8.
+
+Supported .NET Frameworks are 4.6.2 and 4.8.
+
+_The .NET Core assemblies are not supported yet._
 
 
 ### Usage in modern .NET SDK-style projects
